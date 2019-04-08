@@ -16,7 +16,7 @@ public class Furniture {
     /// <summary>
     /// This "objectType" will be queried by the visual system to know what sprite to render for this object.
     /// </summary>
-    public string objectType { get; protected set; } 
+    public string objectType { get; protected set; }
 
     /// <summary>
     /// This is a multiplier, so a value of "2" here, means you move twice as slowly (i.e. at half speed)
@@ -90,7 +90,7 @@ public class Furniture {
             t.furniture.cbOnChanged(t.furniture);
         }
 
-        t = tile.world.GetTileAt(x+1, y);
+        t = tile.world.GetTileAt(x + 1, y);
         if (t != null && t.furniture != null && t.furniture.objectType == obj.objectType) {
             t.furniture.cbOnChanged(t.furniture);
         }
@@ -100,7 +100,7 @@ public class Furniture {
             t.furniture.cbOnChanged(t.furniture);
         }
 
-        t = tile.world.GetTileAt(x-1, y);
+        t = tile.world.GetTileAt(x - 1, y);
         if (t != null && t.furniture != null && t.furniture.objectType == obj.objectType) {
             t.furniture.cbOnChanged(t.furniture);
         }
@@ -131,4 +131,4 @@ public class Furniture {
         if (__IsValidPosition(t) == false) return false;
         return true;
     }
-}   
+}

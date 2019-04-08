@@ -51,7 +51,7 @@ public class World {
 
     void CreateIsntalledObjectPrototypes() {
         furniturePrototypes = new Dictionary<string, Furniture>();
-        
+
         furniturePrototypes.Add("Wall",
             Furniture.CreatePrototype("Wall", 0, 1, 1, true)
         );
@@ -99,7 +99,7 @@ public class World {
             Debug.LogError("furniturePrototypes doesn't contain a proto for key: " + objectType);
             return false;
         }
-        
+
         Furniture obj = Furniture.PlaceInstance(furniturePrototypes[objectType], t);
 
         if (obj == null) {

@@ -33,48 +33,48 @@ public class Tile {
     public Job pendingFurnitureJob;
 
     // Furniture is something like a wall, door, or sofa.
-    public Furniture furniture {get; protected set;}
+    public Furniture furniture { get; protected set; }
 
-	// We need to know the context in which we exist. Probably. Maybe.
-	public World world { get; protected set; }
-	public int X { get; protected set; }
-	public int Y { get; protected set; }
+    // We need to know the context in which we exist. Probably. Maybe.
+    public World world { get; protected set; }
+    public int X { get; protected set; }
+    public int Y { get; protected set; }
 
-	// The function we callback any time our tile changes
-	Action<Tile> cbTileChanged;
+    // The function we callback any time our tile changes
+    Action<Tile> cbTileChanged;
 
-	/// <summary>
-	/// Initializes a new instance of the <see cref="Tile"/> class.
-	/// </summary>
-	/// <param name="world">A World instance.</param>
-	/// <param name="x">The x coordinate.</param>
-	/// <param name="y">The y coordinate.</param>
-	public Tile( World world, int x, int y ) {
-		this.world = world;
-		this.X = x;
-		this.Y = y;
-	}
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Tile"/> class.
+    /// </summary>
+    /// <param name="world">A World instance.</param>
+    /// <param name="x">The x coordinate.</param>
+    /// <param name="y">The y coordinate.</param>
+    public Tile(World world, int x, int y) {
+        this.world = world;
+        this.X = x;
+        this.Y = y;
+    }
 
-	/// <summary>
-	/// Register a function to be called back when our tile type changes.
-	/// </summary>
-	public void RegisterTileTypeChangedCallback(Action<Tile> callback) {
-		cbTileChanged += callback;
-	}
-	
-	/// <summary>
-	/// Unregister a callback.
-	/// </summary>
-	public void UnegisterTileTypeChangedCallback(Action<Tile> callback) {
-		cbTileChanged -= callback;
-	}
-	
+    /// <summary>
+    /// Register a function to be called back when our tile type changes.
+    /// </summary>
+    public void RegisterTileTypeChangedCallback(Action<Tile> callback) {
+        cbTileChanged += callback;
+    }
+
+    /// <summary>
+    /// Unregister a callback.
+    /// </summary>
+    public void UnegisterTileTypeChangedCallback(Action<Tile> callback) {
+        cbTileChanged -= callback;
+    }
+
     public bool PlaceFurniture(Furniture objInstance) {
         if (objInstance == null) {
             // We are uninstalling whatever was here before.
             furniture = null;
             return true;
-        } 
+        }
 
         if (furniture != null) {
             Debug.LogError("Trying to assign a furniture to a tile that already has one!");

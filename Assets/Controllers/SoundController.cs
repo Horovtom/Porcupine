@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SoundController : MonoBehaviour
-{
+public class SoundController : MonoBehaviour {
     Dictionary<string, AudioClip> audioClips;
     float soundCooldownRemaining = 0;
     float soundCooldown = 0.2f;
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         LoadAudioClips();
         WorldController.Instance.World.RegisterFurnitureCreated(OnFurnitureCreated);
         WorldController.Instance.World.RegisterTileChanged(OnTileTypeChanged);
@@ -35,8 +33,7 @@ public class SoundController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         soundCooldownRemaining -= Time.deltaTime;
     }
 
