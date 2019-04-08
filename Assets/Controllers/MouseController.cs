@@ -6,10 +6,6 @@ public class MouseController : MonoBehaviour {
 
     public GameObject circleCursorPrefab;
 
-    bool buildModeIsObjects = false;
-    string buildModeObjectType;
-    TileType buildModeTile = TileType.Floor;
-
     // The world-position of the mouse last frame.
     Vector3 lastFramePosition;
     Vector3 currFramePosition;
@@ -38,20 +34,6 @@ public class MouseController : MonoBehaviour {
         lastFramePosition.z = 0;
     }
 
-    /*	void UpdateCursor() {
-            // Update the circle cursor position
-            Tile tileUnderMouse = WorldController.Instance.GetTileAtWorldCoord(currFramePosition);
-            if(tileUnderMouse != null) {
-                circleCursor.SetActive(true);
-                Vector3 cursorPosition = new Vector3(tileUnderMouse.X, tileUnderMouse.Y, 0);
-                circleCursor.transform.position = cursorPosition;
-            }
-            else {
-                // Mouse is outside of the valid tile space, so hide the cursor.
-                circleCursor.SetActive(false);
-            }
-        }
-    */
     void UpdateDragging() {
         // If we're over a UI element, then bail out from this.
         if (EventSystem.current.IsPointerOverGameObject()) {
@@ -91,7 +73,7 @@ public class MouseController : MonoBehaviour {
             // Display a preview of the drag area
             for (int x = start_x; x <= end_x; x++) {
                 for (int y = start_y; y <= end_y; y++) {
-                    Tile t = WorldController.Instance.World.GetTileAt(x, y);
+                    Tile t = WorldController.Instance.world.GetTileAt(x, y);
                     if (t != null) {
                         // Display the building hint on top of this tile position
                         GameObject go = SimplePool.Spawn(circleCursorPrefab, new Vector3(x, y, 0), Quaternion.identity);
@@ -104,42 +86,20 @@ public class MouseController : MonoBehaviour {
 
         // End Drag
         if (Input.GetMouseButtonUp(0)) {
-
+            BuildModeController bmc = GameObject.FindObjectOfType<BuildModeController>();
             // Loop through all the tiles
             for (int x = start_x; x <= end_x; x++) {
                 for (int y = start_y; y <= end_y; y++) {
-                    Tile t = WorldController.Instance.World.GetTileAt(x, y);
+                    Tile t = WorldController.Instance.world.GetTileAt(x, y);
                     if (t == null) continue;
-
-                    if (buildModeIsObjects) {
-                        string type = buildModeObjectType;
-
-                        // Can we even build the furniture in the selected tile?
-                        // Run the ValidPlacement function!
-                        if (!WorldController.Instance.World.IsFurniturePlacementValid(type, t) ||
-                            t.pendingFurnitureJob != null) {
-                            // This tile isn't valid for this furniture
-                            continue;
-                        }
-
-                        Job j = new Job(t, (job) => {
-                            WorldController.Instance.World.PlaceFurniture(type, job.Tile);
-                            job.Tile.pendingFurnitureJob = null;
-                        });
-                        t.pendingFurnitureJob = j;
-                        j.RegisterJobCancelCallback((job) => { job.Tile.pendingFurnitureJob = null; });
-                        WorldController.Instance.World.jobQueue.Enqueue(j);
-                    } else {
-                        // We are in tile-changing mode.
-                        t.Type = buildModeTile;
-                    }
+                    bmc.DoBuild(t);
                 }
             }
         }
     }
 
     void OnFurnitureJobComplete(string furnitureType, Tile t) {
-        WorldController.Instance.World.PlaceFurniture(furnitureType, t);
+        WorldController.Instance.world.PlaceFurniture(furnitureType, t);
     }
 
     void UpdateCameraMovement() {
@@ -152,22 +112,6 @@ public class MouseController : MonoBehaviour {
         }
 
         Camera.main.orthographicSize -= Camera.main.orthographicSize * Input.GetAxis("Mouse ScrollWheel");
-
         Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, 3f, 25f);
-    }
-
-    public void SetMode_BuildFloor() {
-        buildModeIsObjects = false;
-        buildModeTile = TileType.Floor;
-    }
-
-    public void SetMode_Bulldoze() {
-        buildModeIsObjects = false;
-        buildModeTile = TileType.Empty;
-    }
-
-    public void SetMode_BuildFurniture(string objectType) {
-        buildModeIsObjects = true;
-        buildModeObjectType = objectType;
     }
 }

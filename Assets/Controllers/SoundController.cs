@@ -10,8 +10,8 @@ public class SoundController : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         LoadAudioClips();
-        WorldController.Instance.World.RegisterFurnitureCreated(OnFurnitureCreated);
-        WorldController.Instance.World.RegisterTileChanged(OnTileTypeChanged);
+        WorldController.Instance.world.RegisterFurnitureCreated(OnFurnitureCreated);
+        WorldController.Instance.world.RegisterTileChanged(OnTileTypeChanged);
     }
 
     void LoadAudioClips() {
