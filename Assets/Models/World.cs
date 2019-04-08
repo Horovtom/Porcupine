@@ -23,6 +23,8 @@ public class World {
     Action<Furniture> cbFurnitureCreated;
     Action<Tile> cbTileChanged;
 
+    public Queue<Job> jobQueue;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="World"/> class.
     /// </summary>
@@ -31,6 +33,8 @@ public class World {
     public World(int width = 100, int height = 100) {
         Width = width;
         Height = height;
+
+        jobQueue = new Queue<Job>();
 
         tiles = new Tile[Width, Height];
 
@@ -126,4 +130,11 @@ public class World {
         cbTileChanged?.Invoke(t);
     }
 
+    public bool IsFurniturePlacementValid(string furnitureType, Tile t) {
+        if (!furniturePrototypes.ContainsKey(furnitureType)) {
+            Debug.LogError("IsFurniturePlacementValid -- invalid furniture type: " + furnitureType);
+            return false;
+        }
+        return furniturePrototypes[furnitureType].IsValidPosition(t);
+    }
 }

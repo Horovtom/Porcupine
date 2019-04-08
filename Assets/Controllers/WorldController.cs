@@ -113,8 +113,8 @@ public class WorldController : MonoBehaviour {
         // Create a visual GameObject linked to this data.
         // This creates a new GameObject and adds it to our scene.
 
-        int x = obj.tile.X;
-        int y = obj.tile.Y;
+        int x = obj.Tile.X;
+        int y = obj.Tile.Y;
         GameObject obj_go = new GameObject();
         obj_go.name = obj.objectType + "_" + x + "_" + y;
         obj_go.transform.position = new Vector3(x, y, 0);
@@ -140,8 +140,8 @@ public class WorldController : MonoBehaviour {
             return furnitureSprites[spriteName];
         }
 
-        int x = obj.tile.X;
-        int y = obj.tile.Y;
+        int x = obj.Tile.X;
+        int y = obj.Tile.Y;
 
         spriteName += "_";
 

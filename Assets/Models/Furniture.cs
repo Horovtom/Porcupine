@@ -11,7 +11,7 @@ public class Furniture {
     /// <summary>
     /// This represents the BASE tile of the object -- but in practice, large objects may actually occupy multiple tiles.
     /// </summary>
-    public Tile tile { get; protected set; }
+    public Tile Tile { get; protected set; }
 
     /// <summary>
     /// This "objectType" will be queried by the visual system to know what sprite to render for this object.
@@ -34,7 +34,7 @@ public class Furniture {
     public bool linksToNeighbour { get; protected set; }
 
     Action<Furniture> cbOnChanged;
-    Func<Tile, bool> funcPositionValidation;
+    public Func<Tile, bool> funcPositionValidation;
 
     protected Furniture() { }
 
@@ -46,7 +46,7 @@ public class Furniture {
         obj.height = height;
         obj.linksToNeighbour = linksToNeighbour;
 
-        obj.funcPositionValidation = obj.IsValidPosition;
+        obj.funcPositionValidation = obj.__IsValidPosition;
         return obj;
     }
 
@@ -62,7 +62,7 @@ public class Furniture {
         obj.height = proto.height;
         obj.linksToNeighbour = proto.linksToNeighbour;
 
-        obj.tile = tile;
+        obj.Tile = tile;
 
         if (!tile.PlaceFurniture(obj)) {
             // For some reason, we weren't able to place our object in this tile.
@@ -116,15 +116,19 @@ public class Furniture {
     }
 
     public bool IsValidPosition(Tile t) {
+        return funcPositionValidation(t);
+    }
+
+    public bool __IsValidPosition(Tile t) {
         if (t.Type != TileType.Floor) return false;
         if (t.furniture != null) return false;
 
         return true;
     }
 
-    public bool IsValidPosition_Door(Tile t) {
+    public bool __IsValidPosition_Door(Tile t) {
         // Make sure we have a pair of E/W walls or N/S walls
-        if (IsValidPosition(t) == false) return false;
+        if (__IsValidPosition(t) == false) return false;
         return true;
     }
 }   
