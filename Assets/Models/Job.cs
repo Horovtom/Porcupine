@@ -13,12 +13,15 @@ public class Job {
     // Time to complete the job
     float jobTime = 1f;
 
+    public string jobObjectType { get; protected set; }
+
     Action<Job> cbJobComplete;
     Action<Job> cbJobCancel;
 
-    public Job(Tile tile, Action<Job> cbJobComplete, float jobTime = 1f) {
+    public Job(Tile tile, string jobObjectType, Action<Job> cbJobComplete, float jobTime = 1f) {
         this.Tile = tile;
         this.jobTime = jobTime;
+        this.jobObjectType = jobObjectType;
         this.cbJobComplete += cbJobComplete;
     }
 
@@ -28,6 +31,14 @@ public class Job {
 
     public void RegisterJobCancelCallback(Action<Job> cb) {
         cbJobCancel += cb;
+    }
+
+    public void UnregisterJobCompleteCallback(Action<Job> cb) {
+        cbJobComplete -= cb;
+    }
+
+    public void UnregisterJobCancelCallback(Action<Job> cb) {
+        cbJobCancel -= cb;
     }
 
     public void DoWork(float workTime) {

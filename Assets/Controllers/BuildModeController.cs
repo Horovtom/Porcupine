@@ -38,10 +38,12 @@ public class BuildModeController : MonoBehaviour {
                 return;
             }
 
-            Job j = new Job(t, (job) => {
+            Job j = new Job(t, type, (job) => {
                 WorldController.Instance.world.PlaceFurniture(type, job.Tile);
                 job.Tile.pendingFurnitureJob = null;
             });
+
+
             t.pendingFurnitureJob = j;
             j.RegisterJobCancelCallback((job) => { job.Tile.pendingFurnitureJob = null; });
             WorldController.Instance.world.jobQueue.Enqueue(j);

@@ -23,7 +23,7 @@ public class World {
     Action<Furniture> cbFurnitureCreated;
     Action<Tile> cbTileChanged;
 
-    public Queue<Job> jobQueue;
+    public JobQueue jobQueue;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="World"/> class.
@@ -34,7 +34,7 @@ public class World {
         Width = width;
         Height = height;
 
-        jobQueue = new Queue<Job>();
+        jobQueue = new JobQueue();
 
         tiles = new Tile[Width, Height];
 
@@ -136,5 +136,13 @@ public class World {
             return false;
         }
         return furniturePrototypes[furnitureType].IsValidPosition(t);
+    }
+
+    public Furniture GetFurniturePrototype(string objectType) {
+        if (!furniturePrototypes.ContainsKey(objectType)) {
+            Debug.LogError("GetFurniturePrototype -- there was no such furniture in the prototypes dict.");
+            return null;
+        }
+        return furniturePrototypes[objectType];
     }
 }
