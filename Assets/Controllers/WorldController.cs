@@ -20,8 +20,8 @@ public class WorldController : MonoBehaviour {
     Dictionary<Furniture, GameObject> furnitureGameObjectMap;
     Dictionary<string, Sprite> furnitureSprites;
 
-    // Use this for initialization
-    void Start() {
+    // This runs before Start
+    void OnEnable() {
         if (Instance != null) {
             Debug.LogError("There should never be two world controllers.");
         }
@@ -55,11 +55,10 @@ public class WorldController : MonoBehaviour {
                 // because all the tiles are empty right now.
                 // Add a default sprite for empty tiles.
                 tile_go.AddComponent<SpriteRenderer>().sprite = emptySprite;
-
-                // Use a lambda to create an anonymous function to "wrap" our callback function
-                tile_data.RegisterTileTypeChangedCallback(OnTileTypeChanged);
             }
         }
+
+        World.RegisterTileChanged(OnTileChanged);
 
         // Center the Camera
         Camera.main.transform.position = new Vector3(World.Width / 2, World.Height / 2, Camera.main.transform.position.z);
@@ -83,7 +82,7 @@ public class WorldController : MonoBehaviour {
     }
 
     // This function should be called automatically whenever a tile's type gets changed.
-    void OnTileTypeChanged(Tile tile) {
+    void OnTileChanged(Tile tile) {
         if (!tileGameObjectMap.ContainsKey(tile)) {
             Debug.LogError("There was no GameObject registered for this Tile: " + tile);
             return;
