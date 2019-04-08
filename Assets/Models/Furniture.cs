@@ -34,6 +34,7 @@ public class Furniture {
     public bool linksToNeighbour { get; protected set; }
 
     Action<Furniture> cbOnChanged;
+    Func<Tile, bool> funcPositionValidation;
 
     protected Furniture() { }
 
@@ -45,11 +46,15 @@ public class Furniture {
         obj.height = height;
         obj.linksToNeighbour = linksToNeighbour;
 
-
+        obj.funcPositionValidation = obj.IsValidPosition;
         return obj;
     }
 
     static public Furniture PlaceInstance(Furniture proto, Tile tile) {
+        if (proto.funcPositionValidation(tile) == false) {
+            Debug.LogError("PlaceInstance -- Position validity function returned False.");
+            return null;
+        }
         Furniture obj = new Furniture();
         obj.objectType = proto.objectType;
         obj.movementCost = proto.movementCost;
@@ -108,5 +113,18 @@ public class Furniture {
 
     public void UnregisterOnChangedCallback(Action<Furniture> callbackFunc) {
         cbOnChanged -= callbackFunc;
+    }
+
+    public bool IsValidPosition(Tile t) {
+        if (t.Type != TileType.Floor) return false;
+        if (t.furniture != null) return false;
+
+        return true;
+    }
+
+    public bool IsValidPosition_Door(Tile t) {
+        // Make sure we have a pair of E/W walls or N/S walls
+        if (IsValidPosition(t) == false) return false;
+        return true;
     }
 }   

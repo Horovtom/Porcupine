@@ -11,7 +11,7 @@ using System;
 public class WorldController : MonoBehaviour {
     public static WorldController Instance { get; protected set; }
 
-    public Sprite floorSprite;
+    public Sprite floorSprite, emptySprite;
 
     // The world and tile data
     public World World { get; protected set; }
@@ -53,15 +53,16 @@ public class WorldController : MonoBehaviour {
 
                 // Add a sprite renderer, but don't bother setting a sprite
                 // because all the tiles are empty right now.
-                tile_go.AddComponent<SpriteRenderer>();
+                // Add a default sprite for empty tiles.
+                tile_go.AddComponent<SpriteRenderer>().sprite = emptySprite;
 
                 // Use a lambda to create an anonymous function to "wrap" our callback function
                 tile_data.RegisterTileTypeChangedCallback(OnTileTypeChanged);
             }
         }
 
-        // Shake things up, for testing.
-        World.RandomizeTiles();
+        // Center the Camera
+        Camera.main.transform.position = new Vector3(World.Width / 2, World.Height / 2, Camera.main.transform.position.z);
     }
 
     void PopulateFurnitureSpritesDictionary() {
@@ -91,7 +92,7 @@ public class WorldController : MonoBehaviour {
         if (tile.Type == TileType.Floor) {
             tile_go.GetComponent<SpriteRenderer>().sprite = floorSprite;
         } else if (tile.Type == TileType.Empty) {
-            tile_go.GetComponent<SpriteRenderer>().sprite = null;
+            tile_go.GetComponent<SpriteRenderer>().sprite = emptySprite;
         } else {
             Debug.LogError("OnTileTypeChanged - Unrecognized tile type.");
         }
